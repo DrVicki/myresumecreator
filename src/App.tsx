@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ResumeData, TabType } from './types';
 import PersonalInfoForm from './components/PersonalInfoForm';
 import ExperienceForm from './components/ExperienceForm';
@@ -38,54 +38,69 @@ const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
 function App() {
   const [resumeData, setResumeData] = useState<ResumeData>(initialResumeData);
   const [activeTab, setActiveTab] = useState<TabType>('personal');
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    console.log('Resume Creator App loaded successfully');
+    setIsLoaded(true);
+  }, []);
 
   const updateResumeData = (updates: Partial<ResumeData>) => {
     setResumeData(prev => ({ ...prev, ...updates }));
   };
 
   const renderTabContent = () => {
-    switch (activeTab) {
-      case 'personal':
-        return (
-          <PersonalInfoForm
-            personalInfo={resumeData.personalInfo}
-            onUpdate={(personalInfo) => updateResumeData({ personalInfo })}
-          />
-        );
-      case 'experience':
-        return (
-          <ExperienceForm
-            experience={resumeData.experience}
-            onUpdate={(experience) => updateResumeData({ experience })}
-          />
-        );
-      case 'education':
-        return (
-          <EducationForm
-            education={resumeData.education}
-            onUpdate={(education) => updateResumeData({ education })}
-          />
-        );
-      case 'projects':
-        return (
-          <ProjectForm
-            projects={resumeData.projects}
-            onUpdate={(projects) => updateResumeData({ projects })}
-          />
-        );
-      case 'certifications':
-        return (
-          <CertificationForm
-            certifications={resumeData.certifications}
-            onUpdate={(certifications) => updateResumeData({ certifications })}
-          />
-        );
-      case 'preview':
-        return <ResumePreview resumeData={resumeData} />;
-      default:
-        return null;
+    try {
+      switch (activeTab) {
+        case 'personal':
+          return (
+            <PersonalInfoForm
+              personalInfo={resumeData.personalInfo}
+              onUpdate={(personalInfo) => updateResumeData({ personalInfo })}
+            />
+          );
+        case 'experience':
+          return (
+            <ExperienceForm
+              experience={resumeData.experience}
+              onUpdate={(experience) => updateResumeData({ experience })}
+            />
+          );
+        case 'education':
+          return (
+            <EducationForm
+              education={resumeData.education}
+              onUpdate={(education) => updateResumeData({ education })}
+            />
+          );
+        case 'projects':
+          return (
+            <ProjectForm
+              projects={resumeData.projects}
+              onUpdate={(projects) => updateResumeData({ projects })}
+            />
+          );
+        case 'certifications':
+          return (
+            <CertificationForm
+              certifications={resumeData.certifications}
+              onUpdate={(certifications) => updateResumeData({ certifications })}
+            />
+          );
+        case 'preview':
+          return <ResumePreview resumeData={resumeData} />;
+        default:
+          return null;
+      }
+    } catch (error) {
+      console.error('Error rendering tab content:', error);
+      return <div>Error loading content. Please refresh the page.</div>;
     }
   };
+
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container">
