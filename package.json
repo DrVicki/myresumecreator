@@ -2,7 +2,7 @@
   "name": "resume-creator",
   "version": "1.0.0",
   "description": "A modern resume creator application",
-  "homepage": "https://yourusername.github.io/MyResumeCreator",
+  "homepage": ".",
   "private": true,
   "dependencies": {
     "@types/node": "^16.18.0",
